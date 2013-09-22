@@ -16,8 +16,10 @@ def parse_line(input):
 
 
 def parse_gcode_file(file):
-    commands = [parse_line(x) for x in file]
-    return filter(bool, commands)
+    for line in file:
+        cmd = parse_line(line)
+        if cmd:
+            yield cmd
 
 
 if __name__ == '__main__':
