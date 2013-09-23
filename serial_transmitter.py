@@ -42,7 +42,11 @@ class ArduinoSerial(object):
 			if self.conn.inWaiting():
 				self.conn.read()
 
-	def read_lines(self, block = True, wait = 0.):
+	def read_lines(self, block = True, wait = 0., count = 0):
+		if count:
+			for i in range(count):
+				yield self.read_line()
+			return
 		start = time.time()
 		if block:
 			yield self.read_line()

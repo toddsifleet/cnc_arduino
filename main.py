@@ -22,7 +22,7 @@ def run_gcode(file_name):
 		cmd = '%d %d %d' % tuple(movement)
 		arduino.write(cmd)
 		print "Reading...."
-		for i in arduino.read_lines(wait = .01):
+		for i in arduino.read_lines(count = 2):
 			print i
 	arduino.close(wait = True)
 
@@ -31,10 +31,11 @@ def run_manual():
 	while 'exit' not in cmd:
 		arduino.write(cmd)
 		print "Reading...."
-		for i in arduino.read_lines(wait = .01):
+		for i in arduino.read_lines(count = 2):
 			print i
 		cmd = raw_input('Action: ')
 	arduino.close()
+
 def run():
 	if len(sys.argv) > 1:
 		run_gcode(sys.argv[1])
