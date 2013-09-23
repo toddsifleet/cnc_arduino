@@ -3,15 +3,17 @@ import re
 
 valid_gcode_commands = ['G1', 'G0']
 
-def parse_line(input):
-    line = re.split(' +', input.split('(')[0].strip())
-    if not line or line[0] not in valid_gcode_commands:
+def parse_line(line):
+    without_comments = line.split('(')[0].strip()
+    args = re.split(' +', without_comments)
+
+    if not args or args[0] not in valid_gcode_commands:
         return None
 
-    arguments = dict(map(lambda i: (i[0], float(i[1:])), line[1:]))
+    parse_arg = lambda i: (i[0], float(i[1:]))
     return dict(
-        command = line[0],
-        **arguments
+        command = args[0],
+        **dict(map(parse_arg, args[1:]))
     )
 
 
