@@ -15,9 +15,7 @@ gcode_commands = {
 }
 
 
-def get_movements(points):
-    current_position = points.next()
-
+def get_movements(points, current_position = (0, 0, 0)):
     for point in points:
         yield tuple(map(operator.sub, point, current_position))
         current_position = point
