@@ -18,7 +18,7 @@ def get_route(file_name):
 	return gcode_interpreter.map_to_steps(movements, steps_per_mm)
 
 def run_gcode(file_name):
-	for movement in get_route('test.gcode'):
+	for movement in get_route(file_name):
 		cmd = '%d %d %d' % tuple(movement)
 		arduino.write(cmd)
 		print "Reading...."
@@ -27,9 +27,18 @@ def run_gcode(file_name):
 	arduino.close(wait = True)
 
 def run_manual():
+	def parse_command(cmd):
+		if cmd.startswith('raw'):
+			return cmd[4:]
+		else:
+			vals = map(float, cmd.split(' '))
+			steps = map(lambda x: x*steps_per_mm, vals)
+			cmd = map(lambda x: str(int(x)), steps)
+			return ' '.join(cmd)
+
 	cmd = raw_input('Action: ').strip()
 	while 'exit' not in cmd:
-		arduino.write(cmd)
+		arduino.write(parse_command(cmd))
 		print "Reading...."
 		for i in arduino.read_lines(count = 2):
 			print i
